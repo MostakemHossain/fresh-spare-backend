@@ -24,8 +24,17 @@ const verifyEmail = z.object({
   }),
 });
 
+const updateUserValidationSchema = z.object({
+  body: z.object({
+    name: z.string({}).optional(),
+    password: z.string({}).optional(),
+    mobile: z.string({}).optional(),
+  }),
+});
+
 const userValidations = {
   createUserValidationSchema,
   verifyEmail,
+  updateUserValidationSchema,
 };
 export default userValidations;

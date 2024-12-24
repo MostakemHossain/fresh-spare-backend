@@ -22,6 +22,12 @@ router.put(
   fileUploader.upload.single('file'),
   userControllers.updateAvatar,
 );
+router.put(
+  '/update-user',
+  auth('User', 'Admin'),
+  validateRequest(userValidations.updateUserValidationSchema),
+  userControllers.updateUserDetails,
+);
 
 const userRoutes = router;
 export default userRoutes;

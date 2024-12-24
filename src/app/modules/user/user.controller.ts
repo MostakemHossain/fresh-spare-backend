@@ -37,9 +37,23 @@ const updateAvatar = catchAsync(
   },
 );
 
+const updateUserDetails = catchAsync(
+  async (req: Request & { user?: any }, res: Response) => {
+    console.log(req);
+    const result = await userServices.updateUserDetails(req.body, req.user.id);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'User Information updated successfully',
+      data: result,
+    });
+  },
+);
+
 const userControllers = {
   userRegistration,
   verifyEmail,
   updateAvatar,
+  updateUserDetails,
 };
 export default userControllers;

@@ -64,9 +64,28 @@ const updateAvatar = async (req: any) => {
   });
   return result;
 };
+
+const updateUserDetails = async (payload: Partial<TUSER>, userId: string) => {
+  const { name, mobile, password } = payload;
+  let hashedPassword = '';
+  if (password) {
+    hashedPassword = await bcrypt.hash(
+      password,
+      Number(config.bcrypt_salt_rounds),
+    );
+  }
+  const result = await UserModel.updateOne({_id:userId}, {
+    ...(name && { name: name }),
+    ...(mobile && { mobile: mobile }),
+    ...(password && { password: hashedPassword }),
+  });
+  return result;
+};
+
 const userServices = {
   userRegistration,
   verifyEmail,
   updateAvatar,
+  updateUserDetails,
 };
 export default userServices;
