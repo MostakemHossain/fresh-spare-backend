@@ -39,6 +39,11 @@ router.post(
   validateRequest(userValidations.verifyForgotPasswordOTPValidationSchema),
   userControllers.verifyForgotPasswordOtp,
 );
+router.post(
+  '/reset-password',
+  validateRequest(userValidations.resetPasswordValidationSchema),
+  userControllers.resetPassword,
+);
 
 const userRoutes = router;
 export default userRoutes;

@@ -7,8 +7,9 @@ import { fileUploader } from '../../shared/fileUpload';
 import forgotPasswordTemplate from '../../utils/forgotPasswordTemplate';
 import generateOTP from '../../utils/generateOTP';
 import verifyEmailTemplate from '../../utils/verifyEmail.templete';
-import { TUSER } from './user.interface';
+import { TRESETPASSWORD, TUSER } from './user.interface';
 import UserModel from './user.model';
+import resetPasswordSuccessTemplate from '../../utils/resetPasswordTemplete';
 const userRegistration = async (payload: TUSER) => {
   const { email, password, name } = payload;
   const isUserAlreadyExists = await UserModel.findOne({ email });
@@ -126,12 +127,35 @@ const verifyForgotPasswordOtp = async ({
   if (currentTime > user.forgot_password_expires) {
     throw new AppError(httpStatus.BAD_REQUEST, 'OTP expired');
   }
-  console.log(user.forgot_password_otp);
-  console.log(otp);
   if (user.forgot_password_otp !== otp) {
     throw new AppError(httpStatus.BAD_REQUEST, 'Invalid OTP');
   }
   return null;
+};
+
+const resetPassword = async (payload: TRESETPASSWORD) => {
+  const { email, newPassword, confirmPassword } = payload;
+  const user = await UserModel.findOne({ email });
+  if (!user) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'User not found');
+  }
+  if (newPassword !== confirmPassword) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'Passwords do not match');
+  }
+  const hashedPassword = await bcrypt.hash(
+    newPassword,
+    Number(config.bcrypt_salt_rounds),
+  );
+  const update = await UserModel.findByIdAndUpdate(user._id, {
+    password: hashedPassword,
+  });
+
+  await sendEmail({
+    sendTo: email,
+    subject: 'Your password has been successfully reset',
+    html: resetPasswordSuccessTemplate({ name: user.name }),
+  });
+  return update;
 };
 
 const userServices = {
@@ -141,5 +165,6 @@ const userServices = {
   updateUserDetails,
   forgotPassword,
   verifyForgotPasswordOtp,
+  resetPassword,
 };
 export default userServices;

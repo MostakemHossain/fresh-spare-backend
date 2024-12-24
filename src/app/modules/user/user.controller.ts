@@ -72,6 +72,16 @@ const verifyForgotPasswordOtp = catchAsync(
   },
 );
 
+const resetPassword = catchAsync(async (req: Request, res: Response) => {
+  const result = await userServices.resetPassword(req.body);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Password reset successfully',
+    data: null,
+  });
+});
+
 const userControllers = {
   userRegistration,
   verifyEmail,
@@ -79,5 +89,6 @@ const userControllers = {
   updateUserDetails,
   forgotPassword,
   verifyForgotPasswordOtp,
+  resetPassword,
 };
 export default userControllers;
