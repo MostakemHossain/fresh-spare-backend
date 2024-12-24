@@ -4,9 +4,11 @@ import config from '../../config';
 import sendEmail from '../../config/sendEmail';
 import AppError from '../../errors/AppError';
 import { fileUploader } from '../../shared/fileUpload';
+import generateOTP from '../../utils/generateOTP';
 import verifyEmailTemplate from '../../utils/verifyEmail.templete';
 import { TUSER } from './user.interface';
 import UserModel from './user.model';
+import forgotPasswordTemplate from '../../utils/forgotPasswordTemplate';
 const userRegistration = async (payload: TUSER) => {
   const { email, password, name } = payload;
   const isUserAlreadyExists = await UserModel.findOne({ email });
@@ -74,12 +76,39 @@ const updateUserDetails = async (payload: Partial<TUSER>, userId: string) => {
       Number(config.bcrypt_salt_rounds),
     );
   }
-  const result = await UserModel.updateOne({_id:userId}, {
-    ...(name && { name: name }),
-    ...(mobile && { mobile: mobile }),
-    ...(password && { password: hashedPassword }),
-  });
+  const result = await UserModel.updateOne(
+    { _id: userId },
+    {
+      ...(name && { name: name }),
+      ...(mobile && { mobile: mobile }),
+      ...(password && { password: hashedPassword }),
+    },
+  );
   return result;
+};
+
+const forgotPassword = async (email: string) => {
+  //existing user
+  console.log(email);
+  const user = await UserModel.findOne({ email });
+  if (!user) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'User not found');
+  }
+  const otp = generateOTP();
+  // expire in 15 min
+  const otpExpiry = new Date(Date.now() + 15 * 60 * 100);
+
+  const update = await UserModel.findByIdAndUpdate(user._id, {
+    forgot_password_otp: otp,
+    forgot_password_expires: new Date(otpExpiry).toISOString(),
+  });
+
+  await sendEmail({
+    sendTo: email,
+    subject: 'Forgot password from FreshSpare',
+    html: forgotPasswordTemplate({ name: user.name, otp }),
+  });
+  return update;
 };
 
 const userServices = {
@@ -87,5 +116,6 @@ const userServices = {
   verifyEmail,
   updateAvatar,
   updateUserDetails,
+  forgotPassword,
 };
 export default userServices;

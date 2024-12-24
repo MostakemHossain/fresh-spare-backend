@@ -32,9 +32,18 @@ const updateUserValidationSchema = z.object({
   }),
 });
 
+const forgotPasswordValidationSchema = z.object({
+  body: z.object({
+    email: z.string({
+      required_error: 'Email is required',
+    }),
+  }),
+});
+
 const userValidations = {
   createUserValidationSchema,
   verifyEmail,
   updateUserValidationSchema,
+  forgotPasswordValidationSchema,
 };
 export default userValidations;

@@ -29,5 +29,11 @@ router.put(
   userControllers.updateUserDetails,
 );
 
+router.post(
+  '/forgot-password',
+  validateRequest(userValidations.forgotPasswordValidationSchema),
+  userControllers.forgotPassword,
+);
+
 const userRoutes = router;
 export default userRoutes;

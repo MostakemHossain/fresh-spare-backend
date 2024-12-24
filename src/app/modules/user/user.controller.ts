@@ -39,7 +39,6 @@ const updateAvatar = catchAsync(
 
 const updateUserDetails = catchAsync(
   async (req: Request & { user?: any }, res: Response) => {
-    console.log(req);
     const result = await userServices.updateUserDetails(req.body, req.user.id);
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -49,11 +48,22 @@ const updateUserDetails = catchAsync(
     });
   },
 );
+const forgotPassword = catchAsync(async (req: Request, res: Response) => {
+  const { email } = req.body;
+  const result = await userServices.forgotPassword(email);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Check your Email',
+    data: null,
+  });
+});
 
 const userControllers = {
   userRegistration,
   verifyEmail,
   updateAvatar,
   updateUserDetails,
+  forgotPassword,
 };
 export default userControllers;
