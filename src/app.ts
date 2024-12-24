@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import globalErrorHandler from './app/middleware/globalErrorHandler';
 import notFound from './app/middleware/notFound';
+import router from './app/routes';
 
 // express
 const app = express();
@@ -22,15 +23,16 @@ app.use(
 
 // application routes
 
+app.use('/api/v1',router);
+
 app.get('/', (req: Request, res: Response) => {
   res.send('Fresh Spare Backend API!!!');
 });
-
 
 // global error handler
 app.use(globalErrorHandler);
 
 //not Found
-app.use(notFound)
+app.use(notFound);
 
 export default app;
