@@ -3,6 +3,7 @@ import httpStatus from 'http-status';
 import config from '../../config';
 import sendEmail from '../../config/sendEmail';
 import AppError from '../../errors/AppError';
+import { fileUploader } from '../../shared/fileUpload';
 import verifyEmailTemplate from '../../utils/verifyEmail.templete';
 import { TUSER } from './user.interface';
 import UserModel from './user.model';
@@ -44,8 +45,28 @@ const verifyEmail = async (code: string) => {
   );
   return updateUser;
 };
+
+const updateAvatar = async (req: any) => {
+  const file = req.file;
+  if (file) {
+    const uploadedProfileImage = await fileUploader.uploadToCloudinary(file);
+    if (uploadedProfileImage && uploadedProfileImage.secure_url) {
+      req.body.avatar = uploadedProfileImage.secure_url;
+    } else {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        'Profile image upload failed!',
+      );
+    }
+  }
+  const result = await UserModel.findByIdAndUpdate(req.user.id, {
+    avatar: req.body.avatar,
+  });
+  return result;
+};
 const userServices = {
   userRegistration,
   verifyEmail,
+  updateAvatar,
 };
 export default userServices;

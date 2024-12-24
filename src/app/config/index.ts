@@ -13,4 +13,7 @@ export default {
   jwt__refresh_expire_in: process.env.JWT_REFRESH_EXPIRE_IN,
   resend_api: process.env.RESEND_API,
   frontend_url: process.env.FRONTEND_URL,
+  cloudinary_cloud_name: process.env.CLOUD_NAME,
+  cloudinary_api_key: process.env.API_KEY,
+  cloudinary_api_secret: process.env.API_SECRET,
 };
