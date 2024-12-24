@@ -28,22 +28,5 @@ router.put(
   validateRequest(userValidations.updateUserValidationSchema),
   userControllers.updateUserDetails,
 );
-
-router.post(
-  '/forgot-password',
-  validateRequest(userValidations.forgotPasswordValidationSchema),
-  userControllers.forgotPassword,
-);
-router.post(
-  '/verify-forgot-password-otp',
-  validateRequest(userValidations.verifyForgotPasswordOTPValidationSchema),
-  userControllers.verifyForgotPasswordOtp,
-);
-router.post(
-  '/reset-password',
-  validateRequest(userValidations.resetPasswordValidationSchema),
-  userControllers.resetPassword,
-);
-
 const userRoutes = router;
 export default userRoutes;

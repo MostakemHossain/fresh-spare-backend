@@ -4,12 +4,9 @@ import config from '../../config';
 import sendEmail from '../../config/sendEmail';
 import AppError from '../../errors/AppError';
 import { fileUploader } from '../../shared/fileUpload';
-import forgotPasswordTemplate from '../../utils/forgotPasswordTemplate';
-import generateOTP from '../../utils/generateOTP';
 import verifyEmailTemplate from '../../utils/verifyEmail.templete';
-import { TRESETPASSWORD, TUSER } from './user.interface';
+import { TUSER } from './user.interface';
 import UserModel from './user.model';
-import resetPasswordSuccessTemplate from '../../utils/resetPasswordTemplete';
 const userRegistration = async (payload: TUSER) => {
   const { email, password, name } = payload;
   const isUserAlreadyExists = await UserModel.findOne({ email });
@@ -88,83 +85,10 @@ const updateUserDetails = async (payload: Partial<TUSER>, userId: string) => {
   return result;
 };
 
-const forgotPassword = async (email: string) => {
-  //existing user
-  console.log(email);
-  const user = await UserModel.findOne({ email });
-  if (!user) {
-    throw new AppError(httpStatus.BAD_REQUEST, 'User not found');
-  }
-  const otp = generateOTP();
-  // expire in 15 min
-  const otpExpiry = new Date(Date.now() + 15 * 60 * 100);
-
-  const update = await UserModel.findByIdAndUpdate(user._id, {
-    forgot_password_otp: otp,
-    forgot_password_expires: new Date(otpExpiry).toISOString(),
-  });
-
-  await sendEmail({
-    sendTo: email,
-    subject: 'Forgot password from FreshSpare',
-    html: forgotPasswordTemplate({ name: user.name, otp }),
-  });
-  return update;
-};
-
-const verifyForgotPasswordOtp = async ({
-  email,
-  otp,
-}: {
-  email: string;
-  otp: string;
-}) => {
-  const user = await UserModel.findOne({ email });
-  if (!user) {
-    throw new AppError(httpStatus.BAD_REQUEST, 'User not found');
-  }
-  const currentTime = new Date();
-  if (currentTime > user.forgot_password_expires) {
-    throw new AppError(httpStatus.BAD_REQUEST, 'OTP expired');
-  }
-  if (user.forgot_password_otp !== otp) {
-    throw new AppError(httpStatus.BAD_REQUEST, 'Invalid OTP');
-  }
-  return null;
-};
-
-const resetPassword = async (payload: TRESETPASSWORD) => {
-  const { email, newPassword, confirmPassword } = payload;
-  const user = await UserModel.findOne({ email });
-  if (!user) {
-    throw new AppError(httpStatus.BAD_REQUEST, 'User not found');
-  }
-  if (newPassword !== confirmPassword) {
-    throw new AppError(httpStatus.BAD_REQUEST, 'Passwords do not match');
-  }
-  const hashedPassword = await bcrypt.hash(
-    newPassword,
-    Number(config.bcrypt_salt_rounds),
-  );
-  const update = await UserModel.findByIdAndUpdate(user._id, {
-    password: hashedPassword,
-  });
-
-  await sendEmail({
-    sendTo: email,
-    subject: 'Your password has been successfully reset',
-    html: resetPasswordSuccessTemplate({ name: user.name }),
-  });
-  return update;
-};
-
 const userServices = {
   userRegistration,
   verifyEmail,
   updateAvatar,
   updateUserDetails,
-  forgotPassword,
-  verifyForgotPasswordOtp,
-  resetPassword,
 };
 export default userServices;

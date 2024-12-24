@@ -48,47 +48,11 @@ const updateUserDetails = catchAsync(
     });
   },
 );
-const forgotPassword = catchAsync(async (req: Request, res: Response) => {
-  const { email } = req.body;
-  const result = await userServices.forgotPassword(email);
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'Check your Email',
-    data: null,
-  });
-});
-
-const verifyForgotPasswordOtp = catchAsync(
-  async (req: Request, res: Response) => {
-    const { email, otp } = req.body;
-    const result = await userServices.verifyForgotPasswordOtp({ email, otp });
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: 'OTP verification successfully',
-      data: result,
-    });
-  },
-);
-
-const resetPassword = catchAsync(async (req: Request, res: Response) => {
-  const result = await userServices.resetPassword(req.body);
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'Password reset successfully',
-    data: null,
-  });
-});
 
 const userControllers = {
   userRegistration,
   verifyEmail,
   updateAvatar,
   updateUserDetails,
-  forgotPassword,
-  verifyForgotPasswordOtp,
-  resetPassword,
 };
 export default userControllers;

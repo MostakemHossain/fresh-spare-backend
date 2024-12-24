@@ -12,4 +12,21 @@ router.post(
 );
 router.post('/logout', auth('User', 'Admin'), authController.logOutController);
 
+router.post(
+  '/forgot-password',
+  validateRequest(authValidations.forgotPasswordValidationSchema),
+  authController.forgotPassword,
+);
+router.post(
+  '/verify-forgot-password-otp',
+  validateRequest(authValidations.verifyForgotPasswordOTPValidationSchema),
+  authController.verifyForgotPasswordOtp,
+);
+router.post(
+  '/reset-password',
+  validateRequest(authValidations.resetPasswordValidationSchema),
+  authController.resetPassword,
+);
+router.post('/refresh-token', authController.refreshToken);
+
 export const AuthRoutes = router;
