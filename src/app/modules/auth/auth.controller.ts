@@ -25,6 +25,28 @@ const loginUserController = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const logOutController = catchAsync(async (req: Request  & { user?: any }, res: Response) => {
+    const result= await authServices.logoutUser(req.user);
+    res.clearCookie('accessToken', {
+      secure: true,
+      httpOnly: true,
+      sameSite: 'none',
+    });
+    res.clearCookie('refreshToken',{
+      secure: true,
+      httpOnly: true,
+      sameSite: 'none',
+    });
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'User logout successfully',
+      data: null,
+    });
+  });
+
+
 export const authController = {
   loginUserController,
+  logOutController
 };

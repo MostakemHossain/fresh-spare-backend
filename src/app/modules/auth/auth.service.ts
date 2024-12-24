@@ -34,7 +34,7 @@ const loginUser = async (payload: TLoginUser) => {
     config.jwt__refresh_secret as string,
     config.jwt__refresh_expire_in as string,
   );
-   await UserModel.updateOne(
+  await UserModel.updateOne(
     { _id: existingUser._id },
     { refresh_token: refreshToken },
   );
@@ -47,7 +47,15 @@ const loginUser = async (payload: TLoginUser) => {
   };
 };
 
+const logoutUser = async (user: any) => {
+  const removeToken = await UserModel.findByIdAndUpdate(user.id, {
+    refresh_token: '',
+  });
+  return removeToken;
+};
+
 const authServices = {
   loginUser,
+  logoutUser,
 };
 export default authServices;
