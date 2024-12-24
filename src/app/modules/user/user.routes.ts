@@ -34,6 +34,11 @@ router.post(
   validateRequest(userValidations.forgotPasswordValidationSchema),
   userControllers.forgotPassword,
 );
+router.post(
+  '/verify-forgot-password-otp',
+  validateRequest(userValidations.verifyForgotPasswordOTPValidationSchema),
+  userControllers.verifyForgotPasswordOtp,
+);
 
 const userRoutes = router;
 export default userRoutes;

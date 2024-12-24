@@ -4,11 +4,11 @@ import config from '../../config';
 import sendEmail from '../../config/sendEmail';
 import AppError from '../../errors/AppError';
 import { fileUploader } from '../../shared/fileUpload';
+import forgotPasswordTemplate from '../../utils/forgotPasswordTemplate';
 import generateOTP from '../../utils/generateOTP';
 import verifyEmailTemplate from '../../utils/verifyEmail.templete';
 import { TUSER } from './user.interface';
 import UserModel from './user.model';
-import forgotPasswordTemplate from '../../utils/forgotPasswordTemplate';
 const userRegistration = async (payload: TUSER) => {
   const { email, password, name } = payload;
   const isUserAlreadyExists = await UserModel.findOne({ email });
@@ -111,11 +111,35 @@ const forgotPassword = async (email: string) => {
   return update;
 };
 
+const verifyForgotPasswordOtp = async ({
+  email,
+  otp,
+}: {
+  email: string;
+  otp: string;
+}) => {
+  const user = await UserModel.findOne({ email });
+  if (!user) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'User not found');
+  }
+  const currentTime = new Date();
+  if (currentTime > user.forgot_password_expires) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'OTP expired');
+  }
+  console.log(user.forgot_password_otp);
+  console.log(otp);
+  if (user.forgot_password_otp !== otp) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'Invalid OTP');
+  }
+  return null;
+};
+
 const userServices = {
   userRegistration,
   verifyEmail,
   updateAvatar,
   updateUserDetails,
   forgotPassword,
+  verifyForgotPasswordOtp,
 };
 export default userServices;

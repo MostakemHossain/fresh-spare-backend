@@ -39,11 +39,22 @@ const forgotPasswordValidationSchema = z.object({
     }),
   }),
 });
+const verifyForgotPasswordOTPValidationSchema = z.object({
+  body: z.object({
+    email: z.string({
+      required_error: 'Email is required',
+    }),
+    otp: z.string({
+      required_error: 'OTP is required',
+    }),
+  }),
+});
 
 const userValidations = {
   createUserValidationSchema,
   verifyEmail,
   updateUserValidationSchema,
   forgotPasswordValidationSchema,
+  verifyForgotPasswordOTPValidationSchema,
 };
 export default userValidations;
