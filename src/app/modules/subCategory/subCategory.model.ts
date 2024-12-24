@@ -16,5 +16,5 @@ const subCategorySchema = new Schema<TSubCategory>(
     timestamps: true,
   },
 );
-const SubCategoryModel = model('subCategory', subCategorySchema);
+const SubCategoryModel = model<TSubCategory>('subCategory', subCategorySchema);
 export default SubCategoryModel;

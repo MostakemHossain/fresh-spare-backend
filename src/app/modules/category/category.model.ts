@@ -10,5 +10,5 @@ const categorySchema = new Schema<TCategory>(
     timestamps: true,
   },
 );
-const CategoryModel = model('category', categorySchema);
+const CategoryModel = model<TCategory>('category', categorySchema);
 export default CategoryModel;

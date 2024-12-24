@@ -9,6 +9,10 @@ const addressSchema = new Schema<TAddress>(
     country: { type: String },
     pincode: { type: String },
     mobile: { type: String },
+    status:{
+        type:Boolean,
+        default:true
+    }
   },
   {
     timestamps: true,
@@ -17,4 +21,4 @@ const addressSchema = new Schema<TAddress>(
 
 const AddressModel = model<TAddress>('address', addressSchema);
 
-export default addressSchema;
+export default AddressModel;
