@@ -9,6 +9,11 @@ router.post(
   validateRequest(userValidations.createUserValidationSchema),
   userControllers.userRegistration,
 );
+router.post(
+  '/verify-email',
+  validateRequest(userValidations.verifyEmail),
+  userControllers.verifyEmail,
+);
 
 const userRoutes = router;
 export default userRoutes;

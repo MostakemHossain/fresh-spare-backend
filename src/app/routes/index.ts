@@ -1,7 +1,6 @@
 import express from 'express';
 import userRoutes from '../modules/user/user.routes';
 
-
 const router = express.Router();
 
 const moduleRoutes = [

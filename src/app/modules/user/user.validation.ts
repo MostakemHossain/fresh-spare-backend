@@ -16,7 +16,16 @@ const createUserValidationSchema = z.object({
   }),
 });
 
+const verifyEmail = z.object({
+  body: z.object({
+    code: z.string({
+      required_error: 'Id is Required',
+    }),
+  }),
+});
+
 const userValidations = {
   createUserValidationSchema,
+  verifyEmail,
 };
 export default userValidations;

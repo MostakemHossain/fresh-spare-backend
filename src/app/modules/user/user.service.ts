@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import httpStatus from 'http-status';
 import config from '../../config';
 import sendEmail from '../../config/sendEmail';
 import AppError from '../../errors/AppError';
@@ -17,7 +18,6 @@ const userRegistration = async (payload: TUSER) => {
   );
   const user = new UserModel({ email, password: hashedPassword, name });
   const result = await user.save();
-
   const verifyEmailUrl = `${config.frontend_url}/verify-email?code=${result?._id}`;
 
   const verifyEmail = await sendEmail({
@@ -30,7 +30,22 @@ const userRegistration = async (payload: TUSER) => {
   });
   return result;
 };
-const userServices={
-    userRegistration
-}
+
+const verifyEmail = async (code: string) => {
+  const user = await UserModel.findOne({ _id: code });
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  const updateUser = await UserModel.updateOne(
+    { _id: code },
+    {
+      verify_email: true,
+    },
+  );
+  return updateUser;
+};
+const userServices = {
+  userRegistration,
+  verifyEmail,
+};
 export default userServices;
