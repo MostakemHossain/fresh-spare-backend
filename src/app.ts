@@ -3,6 +3,8 @@ import cors from 'cors';
 import express, { Request, Response } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import globalErrorHandler from './app/middleware/globalErrorHandler';
+import notFound from './app/middleware/notFound';
 
 // express
 const app = express();
@@ -23,5 +25,12 @@ app.use(
 app.get('/', (req: Request, res: Response) => {
   res.send('Fresh Spare Backend API!!!');
 });
+
+
+// global error handler
+app.use(globalErrorHandler);
+
+//not Found
+app.use(notFound)
 
 export default app;
