@@ -12,7 +12,18 @@ const createSubCategory = catchAsync(async (req, res) => {
     statusCode: httpStatus.CREATED,
   });
 });
+
+const getAllSubCategory = catchAsync(async (req, res) => {
+  const result = await SubCategoryServices.getAllSubCategory();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'All Sub Category retrieved successfully',
+    data: result,
+  });
+});
 const SubCategoryController = {
   createSubCategory,
+  getAllSubCategory,
 };
 export default SubCategoryController;

@@ -5,6 +5,12 @@ import { fileUploader } from '../../shared/fileUpload';
 import SubCategoryModel from './subCategory.model';
 
 const createSubCategory = async (req: any) => {
+  const isSubCategoryAlreadyExists = await SubCategoryModel.findOne(
+    req.body.data,
+  );
+  if (isSubCategoryAlreadyExists) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'Sub Category already exists');
+  }
   const file = req.file;
   if (file) {
     const uploadedProfileImage = await fileUploader.uploadToCloudinary(file);
@@ -46,7 +52,15 @@ const createSubCategory = async (req: any) => {
   return result;
 };
 
+const getAllSubCategory = async () => {
+  const result = await SubCategoryModel.find().populate('category').sort({
+    createdAt: -1,
+  });
+  return result;
+};
+
 const SubCategoryServices = {
   createSubCategory,
+  getAllSubCategory,
 };
 export default SubCategoryServices;
