@@ -28,5 +28,6 @@ router.put(
   validateRequest(userValidations.updateUserValidationSchema),
   userControllers.updateUserDetails,
 );
+router.get('/me', auth('User', 'Admin'), userControllers.getMe);
 const userRoutes = router;
 export default userRoutes;

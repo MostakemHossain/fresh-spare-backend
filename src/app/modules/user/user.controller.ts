@@ -49,10 +49,23 @@ const updateUserDetails = catchAsync(
   },
 );
 
+const getMe = catchAsync(
+  async (req: Request & { user?: any }, res: Response) => {
+    const result = await userServices.getMe(req.user.id);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'My Information retrieved successfully',
+      data: result,
+    });
+  },
+);
+
 const userControllers = {
   userRegistration,
   verifyEmail,
   updateAvatar,
   updateUserDetails,
+  getMe,
 };
 export default userControllers;

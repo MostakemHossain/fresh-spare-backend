@@ -85,10 +85,16 @@ const updateUserDetails = async (payload: Partial<TUSER>, userId: string) => {
   return result;
 };
 
+const getMe = async (user: string) => {
+  const result = await UserModel.findById(user);
+  return result;
+};
+
 const userServices = {
   userRegistration,
   verifyEmail,
   updateAvatar,
   updateUserDetails,
+  getMe,
 };
 export default userServices;

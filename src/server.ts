@@ -4,7 +4,6 @@ import app from './app';
 import config from './app/config';
 
 let server: Server;
-const port = 7000;
 
 async function main() {
   try {
