@@ -31,12 +31,47 @@ const addCategory = async (req: any) => {
   return result;
 };
 
+const updateCategory = async (req: any) => {
+  const { id } = req.params;
+  const file = req.file;
+  let imageUrl: string | undefined;
+  if (file) {
+    const uploadedImage = await fileUploader.uploadToCloudinary(file);
+    if (uploadedImage && uploadedImage.secure_url) {
+      imageUrl = uploadedImage.secure_url;
+    } else {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        'Category image upload failed!',
+      );
+    }
+  }
+
+  const updateData: { name?: string; image?: string } = {};
+  if (req.body?.data) {
+    updateData.name = req.body.data;
+  }
+  if (imageUrl) {
+    updateData.image = imageUrl;
+  }
+
+  const updatedCategory = await CategoryModel.findByIdAndUpdate(id, updateData);
+  return updatedCategory;
+};
+
 const getAllCategory = async () => {
   const result = await CategoryModel.find({});
+  return result;
+};
+
+const deleteCategory = async (id: string) => {
+  const result = await CategoryModel.findByIdAndDelete(id);
   return result;
 };
 const CategoryServices = {
   addCategory,
   getAllCategory,
+  deleteCategory,
+  updateCategory,
 };
 export default CategoryServices;
