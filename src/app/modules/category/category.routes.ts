@@ -10,5 +10,11 @@ router.post(
   CategoryController.addCategory,
 );
 
+router.get(
+  '/all',
+  //   auth('Admin'),
+  CategoryController.getAllCategory,
+);
+
 const CategoryRoutes = router;
 export default CategoryRoutes;
