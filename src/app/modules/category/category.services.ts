@@ -1,6 +1,8 @@
 import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 import { fileUploader } from '../../shared/fileUpload';
+import ProductModel from '../product/product.model';
+import SubCategoryModel from '../subCategory/subCategory.model';
 import CategoryModel from './category.model';
 
 const addCategory = async (req: any) => {
@@ -65,6 +67,19 @@ const getAllCategory = async () => {
 };
 
 const deleteCategory = async (id: string) => {
+  const checkSubCategory = await SubCategoryModel.find({
+    category: {
+      $in: [id],
+    },
+  }).countDocuments();
+  const checkProductModel = await ProductModel.find({
+    category: {
+      $in: [id],
+    },
+  }).countDocuments();
+  if (checkSubCategory > 0 || checkProductModel > 0) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'Category is already used');
+  }
   const result = await CategoryModel.findByIdAndDelete(id);
   return result;
 };

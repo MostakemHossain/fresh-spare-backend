@@ -55,5 +55,5 @@ const productSchema = new Schema<TProduct>(
     timestamps: true,
   },
 );
-const productModel = model<TProduct>('product', productSchema);
-module.exports = productModel;
+const ProductModel = model<TProduct>('product', productSchema);
+export default  ProductModel;
