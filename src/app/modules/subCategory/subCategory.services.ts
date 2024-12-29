@@ -52,6 +52,11 @@ const createSubCategory = async (req: any) => {
   return result;
 };
 
+const deleteSubCategory = async (id: string) => {
+  const subCategory = await SubCategoryModel.findByIdAndDelete(id);
+  return subCategory;
+};
+
 const getAllSubCategory = async () => {
   const result = await SubCategoryModel.find().populate('category').sort({
     createdAt: -1,
@@ -62,5 +67,6 @@ const getAllSubCategory = async () => {
 const SubCategoryServices = {
   createSubCategory,
   getAllSubCategory,
+  deleteSubCategory,
 };
 export default SubCategoryServices;

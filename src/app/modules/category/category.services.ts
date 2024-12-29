@@ -62,7 +62,9 @@ const updateCategory = async (req: any) => {
 };
 
 const getAllCategory = async () => {
-  const result = await CategoryModel.find({});
+  const result = await CategoryModel.find({}).sort({
+    createdAt: -1,
+  });
   return result;
 };
 
