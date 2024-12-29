@@ -64,9 +64,67 @@ const getAllSubCategory = async () => {
   return result;
 };
 
+const updateSubCategory = async (req: any) => {
+  const { id } = req.params;
+  const file = req.file;
+  let imageUrl: string | undefined;
+
+  if (file) {
+    const uploadedImage = await fileUploader.uploadToCloudinary(file);
+    if (uploadedImage && uploadedImage.secure_url) {
+      imageUrl = uploadedImage.secure_url;
+    } else {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        'Category image upload failed!',
+      );
+    }
+  }
+
+  let categories: string[] = [];
+
+  if (req.body.categories) {
+    try {
+      const categoryArray = JSON.parse(req.body.categories);
+
+      if (Array.isArray(categoryArray)) {
+        categories = categoryArray.map((id: string) => {
+          if (!Types.ObjectId.isValid(id)) {
+            throw new Error(`Invalid ObjectId: ${id}`);
+          }
+          return new Types.ObjectId(id).toString();
+        });
+      } else {
+        throw new Error('Categories is not a valid array!');
+      }
+    } catch (error) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Invalid categories format!');
+    }
+  }
+
+  const updateData: { name?: string; image?: string; categories?: string[] } =
+    {};
+
+  if (req.body?.data) {
+    updateData.name = req.body.data;
+  }
+
+  if (imageUrl) {
+    updateData.image = imageUrl;
+  }
+
+  if (req.body.categories) {
+    updateData.categories = categories;
+  }
+
+  const result = await SubCategoryModel.findByIdAndUpdate(id,updateData);
+  return result;
+};
+
 const SubCategoryServices = {
   createSubCategory,
   getAllSubCategory,
   deleteSubCategory,
+  updateSubCategory,
 };
 export default SubCategoryServices;

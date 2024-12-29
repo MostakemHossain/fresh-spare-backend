@@ -31,9 +31,19 @@ const deleteSubCategory = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const updateSubCategory = catchAsync(async (req, res) => {
+  const result = await SubCategoryServices.updateSubCategory(req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Sub Category updated successfully',
+    data: result,
+  });
+});
 const SubCategoryController = {
   createSubCategory,
   getAllSubCategory,
   deleteSubCategory,
+  updateSubCategory,
 };
 export default SubCategoryController;

@@ -10,6 +10,7 @@ router.post(
 );
 router.get('/all', SubCategoryController.getAllSubCategory);
 router.delete('/:id', SubCategoryController.deleteSubCategory);
+router.put('/update/:id',fileUploader.upload.single('file'), SubCategoryController.updateSubCategory);
 
 const SubCategoryRoutes = router;
 export default SubCategoryRoutes;
