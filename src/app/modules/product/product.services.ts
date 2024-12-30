@@ -1,4 +1,5 @@
 import AppError from '../../errors/AppError';
+import QueryBuilder from '../../query/QueryBuilder';
 import { fileUploader } from '../../shared/fileUpload';
 import { TProduct } from './product.interface';
 import ProductModel from './product.model';
@@ -25,8 +26,30 @@ const createProduct = async (payload: TProduct) => {
   return result;
 };
 
+const getAllProduct = async (req: any) => {
+  const query = req.query;
+  const queryBuilder = new QueryBuilder(ProductModel.find({}), query);
+
+  queryBuilder
+    .search(['name', 'description'])
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const result = await queryBuilder.modelQuery.exec();
+
+  const total = await queryBuilder.countTotal();
+
+  return {
+    data: result,
+    total,
+  };
+};
+
 const ProductService = {
   uploadImage,
   createProduct,
+  getAllProduct,
 };
 export default ProductService;

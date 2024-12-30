@@ -23,8 +23,19 @@ const createProduct = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
+const getAllProduct = catchAsync(async (req, res) => {
+  const result = await ProductService.getAllProduct(req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Products retrieved successfully',
+    data: result,
+  });
+});
 const ProductController = {
   uploadImage,
+  getAllProduct,
   createProduct,
 };
 export default ProductController;

@@ -13,5 +13,6 @@ router.post(
   // auth('Admin'),
   ProductController.createProduct,
 );
+router.get('/all', ProductController.getAllProduct);
 const ProductRoutes = router;
 export default ProductRoutes;
