@@ -91,6 +91,16 @@ const getProductDetails = async (id: string) => {
   return result;
 };
 
+const updateProduct = async (id: string, payload: any) => {
+  const res = await ProductModel.findByIdAndUpdate(id, payload);
+  return res;
+};
+
+const deleteProduct = async (id: string) => {
+  const res = await ProductModel.findByIdAndDelete(id);
+  return res;
+};
+
 const ProductService = {
   uploadImage,
   createProduct,
@@ -98,5 +108,7 @@ const ProductService = {
   getProductByCategory,
   getGetProductByCategoryAndSubCategory,
   getProductDetails,
+  updateProduct,
+  deleteProduct,
 };
 export default ProductService;

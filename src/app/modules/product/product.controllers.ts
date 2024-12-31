@@ -58,12 +58,31 @@ const getGetProductByCategoryAndSubCategory = catchAsync(async (req, res) => {
 });
 
 const getProductDetails = catchAsync(async (req, res) => {
-  console.log(req.params.id);
   const result = await ProductService.getProductDetails(req.params.id);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Get Product details retrieved successfully',
+    data: result,
+  });
+});
+
+const updateProduct = catchAsync(async (req, res) => {
+  const result = await ProductService.updateProduct(req.params.id, req.body);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Product updated successfully',
+    data: result,
+  });
+});
+
+const deleteProduct = catchAsync(async (req, res) => {
+  const result = await ProductService.deleteProduct(req.params.id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Product deleted successfully',
     data: result,
   });
 });
@@ -75,5 +94,7 @@ const ProductController = {
   getProductByCategory,
   getGetProductByCategoryAndSubCategory,
   getProductDetails,
+  updateProduct,
+  deleteProduct,
 };
 export default ProductController;

@@ -25,5 +25,11 @@ router.post(
 );
 
 router.get('/get-product-details/:id', ProductController.getProductDetails);
+router.put(
+  '/update-product/:id',
+  // auth('Admin'),
+  ProductController.updateProduct,
+);
+router.delete('/delete-product/:id', ProductController.deleteProduct);
 const ProductRoutes = router;
 export default ProductRoutes;
