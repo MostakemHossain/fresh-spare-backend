@@ -57,11 +57,23 @@ const getGetProductByCategoryAndSubCategory = catchAsync(async (req, res) => {
   });
 });
 
+const getProductDetails = catchAsync(async (req, res) => {
+  console.log(req.params.id);
+  const result = await ProductService.getProductDetails(req.params.id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Get Product details retrieved successfully',
+    data: result,
+  });
+});
+
 const ProductController = {
   uploadImage,
   getAllProduct,
   createProduct,
   getProductByCategory,
   getGetProductByCategoryAndSubCategory,
+  getProductDetails,
 };
 export default ProductController;

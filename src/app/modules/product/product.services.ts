@@ -59,13 +59,13 @@ const getGetProductByCategoryAndSubCategory = async (payload: any) => {
     category: { $in: payload.category },
     subCategory: { $in: payload.subCategory },
   };
-  let page=1;
-  let limit=20;
-  if(payload.page){ 
-    page=payload.page;
+  let page = 1;
+  let limit = 20;
+  if (payload.page) {
+    page = payload.page;
   }
-  if(payload.limit){
-    limit=payload.limit;
+  if (payload.limit) {
+    limit = payload.limit;
   }
 
   const skip = (page - 1) * limit;
@@ -80,11 +80,23 @@ const getGetProductByCategoryAndSubCategory = async (payload: any) => {
 
   return { data, dataCount, page, limit };
 };
+
+const getProductDetails = async (id: string) => {
+  if (!id) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'Product Id not found');
+  }
+  const result = await ProductModel.findOne({
+    _id: id,
+  });
+  return result;
+};
+
 const ProductService = {
   uploadImage,
   createProduct,
   getAllProduct,
   getProductByCategory,
   getGetProductByCategoryAndSubCategory,
+  getProductDetails,
 };
 export default ProductService;

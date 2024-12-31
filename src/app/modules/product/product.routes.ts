@@ -23,5 +23,7 @@ router.post(
   '/get-product-by-category-and-sub-category',
   ProductController.getGetProductByCategoryAndSubCategory,
 );
+
+router.get('/get-product-details/:id', ProductController.getProductDetails);
 const ProductRoutes = router;
 export default ProductRoutes;
