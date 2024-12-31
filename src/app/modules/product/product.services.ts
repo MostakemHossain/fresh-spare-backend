@@ -28,7 +28,11 @@ const createProduct = async (payload: TProduct) => {
 
 const getAllProduct = async (req: any) => {
   const query = req.query;
-  const queryBuilder = new QueryBuilder(ProductModel.find({}), query);
+  console.log(query);
+  const queryBuilder = new QueryBuilder(
+    ProductModel.find({}).populate('category subCategory'),
+    query,
+  );
 
   queryBuilder
     .search(['name', 'description'])
@@ -100,7 +104,6 @@ const deleteProduct = async (id: string) => {
   const res = await ProductModel.findByIdAndDelete(id);
   return res;
 };
-
 const ProductService = {
   uploadImage,
   createProduct,
