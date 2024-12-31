@@ -5,9 +5,9 @@ import { fileUploader } from '../../shared/fileUpload';
 import SubCategoryModel from './subCategory.model';
 
 const createSubCategory = async (req: any) => {
-  const isSubCategoryAlreadyExists = await SubCategoryModel.findOne(
-    req.body.data,
-  );
+  const isSubCategoryAlreadyExists = await SubCategoryModel.findOne({
+    name: req.body.name,
+  });
   if (isSubCategoryAlreadyExists) {
     throw new AppError(httpStatus.BAD_REQUEST, 'Sub Category already exists');
   }
@@ -117,7 +117,7 @@ const updateSubCategory = async (req: any) => {
     updateData.categories = categories;
   }
 
-  const result = await SubCategoryModel.findByIdAndUpdate(id,updateData);
+  const result = await SubCategoryModel.findByIdAndUpdate(id, updateData);
   return result;
 };
 

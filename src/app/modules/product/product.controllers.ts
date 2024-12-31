@@ -33,9 +33,35 @@ const getAllProduct = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
+const getProductByCategory = catchAsync(async (req, res) => {
+  console.log(req.params.id);
+  const result = await ProductService.getProductByCategory(req.params.id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Get Product By Category retrieved successfully',
+    data: result,
+  });
+});
+
+const getGetProductByCategoryAndSubCategory = catchAsync(async (req, res) => {
+  const result = await ProductService.getGetProductByCategoryAndSubCategory(
+    req.body,
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Get Product By Category & SubCategory retrieved successfully',
+    data: result,
+  });
+});
+
 const ProductController = {
   uploadImage,
   getAllProduct,
   createProduct,
+  getProductByCategory,
+  getGetProductByCategoryAndSubCategory,
 };
 export default ProductController;

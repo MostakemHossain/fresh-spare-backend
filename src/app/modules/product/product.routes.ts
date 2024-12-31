@@ -14,5 +14,14 @@ router.post(
   ProductController.createProduct,
 );
 router.get('/all', ProductController.getAllProduct);
+router.get(
+  '/get-product-by-category/:id',
+  ProductController.getProductByCategory,
+);
+
+router.post(
+  '/get-product-by-category-and-sub-category',
+  ProductController.getGetProductByCategoryAndSubCategory,
+);
 const ProductRoutes = router;
 export default ProductRoutes;

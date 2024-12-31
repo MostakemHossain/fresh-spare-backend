@@ -13,3 +13,10 @@ export type TProduct = {
   more_details: Record<string, any>;
   publish: boolean;
 };
+
+export type TCategoryAndSubCategory = {
+  categoryId: string;
+  subCategoryId: string;
+  page?: string | number;
+  limit?: string | number;
+};
