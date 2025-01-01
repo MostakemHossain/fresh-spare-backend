@@ -1,4 +1,5 @@
 import express from 'express';
+import AddressRoutes from '../modules/address/address.routes';
 import { AuthRoutes } from '../modules/auth/auth.routes';
 import CartRoutes from '../modules/cartProduct.ts/cartProduct.routes';
 import CategoryRoutes from '../modules/category/category.routes';
@@ -32,6 +33,10 @@ const moduleRoutes = [
   {
     path: '/cart',
     route: CartRoutes,
+  },
+  {
+    path: '/address',
+    route: AddressRoutes,
   },
 ];
 

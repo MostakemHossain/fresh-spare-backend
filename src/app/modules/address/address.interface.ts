@@ -1,3 +1,5 @@
+import { Types } from 'mongoose';
+
 export type TAddress = {
   address_line: string;
   city: string;
@@ -6,4 +8,5 @@ export type TAddress = {
   pincode: string;
   mobile: string;
   status: Boolean;
+  userId: Types.ObjectId;
 };
