@@ -26,7 +26,7 @@ const UserSchema = new Schema<TUSER>(
       default: 'User',
     },
     address_details: { type: Schema.Types.ObjectId, ref: 'address' },
-    shopping_cart: { type: Schema.Types.ObjectId, ref: 'cartProduct' },
+    shopping_cart: [{ type: Schema.Types.ObjectId, ref: 'cartProduct' }],
     orderHistory: { type: Schema.Types.ObjectId, ref: 'order' },
     forgot_password_otp: { type: String, default: null },
     forgot_password_expires: { type: Date },

@@ -1,5 +1,5 @@
 import httpStatus from 'http-status';
-import mongoose from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 import AppError from '../../errors/AppError';
 import UserModel from '../user/user.model';
 import CartProduct from './cartProduct.model';
@@ -23,6 +23,8 @@ const addToCart = async (req: any) => {
   }
   const session = await mongoose.startSession();
   session.startTransaction();
+  console.log(data);
+  const objectIdData = new Types.ObjectId(data);
 
   try {
     const cartItem = await CartProduct.create(
@@ -39,11 +41,12 @@ const addToCart = async (req: any) => {
       { _id: userId },
       {
         $push: {
-          shopping_cart: data,
+          shopping_cart: objectIdData,
         },
       },
       { session },
     );
+    console.log(updateCartUser);
     await session.commitTransaction();
     session.endSession();
 

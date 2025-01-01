@@ -3,6 +3,7 @@ import AddressRoutes from '../modules/address/address.routes';
 import { AuthRoutes } from '../modules/auth/auth.routes';
 import CartRoutes from '../modules/cartProduct.ts/cartProduct.routes';
 import CategoryRoutes from '../modules/category/category.routes';
+import OrderRoutes from '../modules/order/order.routes';
 import ProductRoutes from '../modules/product/product.routes';
 import SubCategoryRoutes from '../modules/subCategory/subCategory.routes';
 import userRoutes from '../modules/user/user.routes';
@@ -37,6 +38,10 @@ const moduleRoutes = [
   {
     path: '/address',
     route: AddressRoutes,
+  },
+  {
+    path: '/order',
+    route: OrderRoutes,
   },
 ];
 
