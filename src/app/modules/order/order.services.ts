@@ -41,6 +41,7 @@ const payments = async (req: any) => {
   const { list_items, totalAmount, address_id, subTotalAmount } = req.body;
 
   const user = await UserModel.findById(userId);
+  console.log(Math.round(totalAmount));
   if (!user) {
     throw new AppError(httpStatus.BAD_REQUEST, 'User not found');
   }
@@ -74,8 +75,10 @@ const payments = async (req: any) => {
           },
         },
         unit_amount:
-          pricewithDiscount(item.productId.price, item.productId.discount) *
-          100,
+          pricewithDiscount(
+            Math.round(item.productId.price),
+            Math.round(item.productId.discount),
+          ) * 100,
       },
       adjustable_quantity: {
         enabled: true,
@@ -120,9 +123,17 @@ const getMyOrderDetails = async (req: any) => {
   return orderList;
 };
 
+const getAllOrdersDetails = async () => {
+  const orderList = await OrderModel.find({}).sort({
+    createdAt: -1,
+  });
+  return orderList;
+};
+
 const OrderServices = {
   cashOnOrderPayment,
   payments,
   getMyOrderDetails,
+  getAllOrdersDetails,
 };
 export default OrderServices;

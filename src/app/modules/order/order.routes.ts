@@ -11,6 +11,7 @@ router.post(
 
 router.post('/checkout', auth('User'), OrderController.payments);
 router.get('/get-my-order', auth('User'), OrderController.getMyOrders);
+router.get('/get-all-order', auth('Admin'), OrderController.getAllOrders);
 
 const OrderRoutes = router;
 

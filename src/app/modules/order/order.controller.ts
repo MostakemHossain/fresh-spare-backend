@@ -39,9 +39,22 @@ const getMyOrders = catchAsync(
     });
   },
 );
+
+const getAllOrders = catchAsync(
+  async (req: Request & { user?: any }, res: Response) => {
+    const result = await OrderServices.getAllOrdersDetails();
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'orders retrieved successfully',
+      data: result,
+    });
+  },
+);
 const OrderController = {
   cashOnOrderPayment,
   payments,
   getMyOrders,
+  getAllOrders,
 };
 export default OrderController;
