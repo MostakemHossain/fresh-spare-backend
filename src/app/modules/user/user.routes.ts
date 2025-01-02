@@ -29,5 +29,10 @@ router.put(
   userControllers.updateUserDetails,
 );
 router.get('/me', auth('User', 'Admin'), userControllers.getMe);
+router.post(
+  '/change-password',
+  auth('User', 'Admin'),
+  userControllers.changePassword,
+);
 const userRoutes = router;
 export default userRoutes;

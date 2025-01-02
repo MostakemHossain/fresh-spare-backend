@@ -3,9 +3,10 @@ import httpStatus from 'http-status';
 import config from '../../config';
 import sendEmail from '../../config/sendEmail';
 import AppError from '../../errors/AppError';
+import { jwtHelpers } from '../../helpers/jwthelpers';
 import { fileUploader } from '../../shared/fileUpload';
 import verifyEmailTemplate from '../../utils/verifyEmail.templete';
-import { TUSER } from './user.interface';
+import { TChangePassword, TUSER } from './user.interface';
 import UserModel from './user.model';
 const userRegistration = async (payload: TUSER) => {
   const { email, password, name } = payload;
@@ -86,8 +87,71 @@ const updateUserDetails = async (payload: Partial<TUSER>, userId: string) => {
 };
 
 const getMe = async (user: string) => {
-  const result = await UserModel.findById(user);
+  const result = await UserModel.findById(user).populate('address_details');
   return result;
+};
+
+const changePassword = async (user: string, payload: TChangePassword) => {
+  const isUserExists = await UserModel.findOne({
+    _id: user,
+  });
+  if (!isUserExists) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'Uses does not exists');
+  }
+  console.log(isUserExists);
+  // compare passsword
+  const isPasswordMatch = await bcrypt.compare(
+    payload.currentPassword,
+    isUserExists.password,
+  );
+  console.log(isPasswordMatch);
+  if (!isPasswordMatch) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'Password does not match');
+  }
+
+  // hashed password
+  const hashedPassword = await bcrypt.hash(
+    payload.newPassword,
+    Number(config.bcrypt_salt_rounds),
+  );
+
+  // update user password
+  const updateUser = await UserModel.findByIdAndUpdate(user, {
+    password: hashedPassword,
+  });
+
+  const accessToken = jwtHelpers.generateToken(
+    {
+      id: isUserExists.id,
+      email: isUserExists.email,
+      role: isUserExists.role,
+      name: isUserExists.name,
+    },
+    config.jwt__access_secret as string,
+    config.jwt__access_expire_in as string,
+  );
+  const refreshToken = jwtHelpers.generateToken(
+    {
+      id: isUserExists.id,
+      email: isUserExists.email,
+      role: isUserExists.role,
+      name: isUserExists.name,
+    },
+    config.jwt__refresh_secret as string,
+    config.jwt__refresh_expire_in as string,
+  );
+  await UserModel.updateOne(
+    { _id: isUserExists._id },
+    { refresh_token: refreshToken },
+  );
+  console.log(accessToken);
+  return {
+    id: isUserExists.id,
+    name: isUserExists.name,
+    email: isUserExists.email,
+    accessToken,
+    refreshToken,
+  };
 };
 
 const userServices = {
@@ -96,5 +160,6 @@ const userServices = {
   updateAvatar,
   updateUserDetails,
   getMe,
+  changePassword,
 };
 export default userServices;

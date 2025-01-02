@@ -61,11 +61,25 @@ const getMe = catchAsync(
   },
 );
 
+const changePassword = catchAsync(
+  async (req: Request & { user?: any }, res: Response) => {
+    console.log(req);
+    const result = await userServices.changePassword(req.user.id, req.body);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Password change successfully',
+      data: result,
+    });
+  },
+);
+
 const userControllers = {
   userRegistration,
   verifyEmail,
   updateAvatar,
   updateUserDetails,
   getMe,
+  changePassword
 };
 export default userControllers;

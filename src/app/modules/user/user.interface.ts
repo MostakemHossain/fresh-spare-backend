@@ -24,3 +24,9 @@ export type TRESETPASSWORD = {
   newPassword: string;
   confirmPassword: string;
 };
+
+export type TChangePassword = {
+  newPassword: string;
+  currentPassword: string;
+  confirmPassword: string;
+};
