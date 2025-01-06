@@ -48,7 +48,9 @@ const verifyEmail = async (code: string) => {
 };
 
 const updateAvatar = async (req: any) => {
+  console.log('hello');
   const file = req.file;
+  console.log(req.file);
   if (file) {
     const uploadedProfileImage = await fileUploader.uploadToCloudinary(file);
     if (uploadedProfileImage && uploadedProfileImage.secure_url) {
@@ -154,7 +156,6 @@ const changePassword = async (user: string, payload: TChangePassword) => {
 };
 
 const GoogleUserRegistration = async (req: any) => {
-
   let userInfo = await UserModel.findOne({ email: req.body.email });
   if (!userInfo) {
     userInfo = await UserModel.create({

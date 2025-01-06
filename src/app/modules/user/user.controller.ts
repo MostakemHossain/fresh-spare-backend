@@ -26,7 +26,6 @@ const verifyEmail = catchAsync(async (req: Request, res: Response) => {
 
 const updateAvatar = catchAsync(
   async (req: Request & { user?: any }, res: Response) => {
-    console.log(req);
     const result = await userServices.updateAvatar(req);
     sendResponse(res, {
       statusCode: httpStatus.OK,
