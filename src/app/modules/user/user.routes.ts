@@ -34,5 +34,6 @@ router.post(
   auth('User', 'Admin'),
   userControllers.changePassword,
 );
+router.post('/google-login', userControllers.GoogleUserRegistration);
 const userRoutes = router;
 export default userRoutes;

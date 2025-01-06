@@ -63,12 +63,23 @@ const getMe = catchAsync(
 
 const changePassword = catchAsync(
   async (req: Request & { user?: any }, res: Response) => {
-    console.log(req);
     const result = await userServices.changePassword(req.user.id, req.body);
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
       message: 'Password change successfully',
+      data: result,
+    });
+  },
+);
+
+const GoogleUserRegistration = catchAsync(
+  async (req: Request & { user?: any }, res: Response) => {
+    const result = await userServices.GoogleUserRegistration(req);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Login  successfully',
       data: result,
     });
   },
@@ -80,6 +91,7 @@ const userControllers = {
   updateAvatar,
   updateUserDetails,
   getMe,
-  changePassword
+  changePassword,
+  GoogleUserRegistration,
 };
 export default userControllers;

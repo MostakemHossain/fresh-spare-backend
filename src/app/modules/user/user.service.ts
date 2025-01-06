@@ -104,7 +104,6 @@ const changePassword = async (user: string, payload: TChangePassword) => {
     payload.currentPassword,
     isUserExists.password,
   );
-  console.log(isPasswordMatch);
   if (!isPasswordMatch) {
     throw new AppError(httpStatus.BAD_REQUEST, 'Password does not match');
   }
@@ -154,6 +153,51 @@ const changePassword = async (user: string, payload: TChangePassword) => {
   };
 };
 
+const GoogleUserRegistration = async (req: any) => {
+
+  let userInfo = await UserModel.findOne({ email: req.body.email });
+  if (!userInfo) {
+    userInfo = await UserModel.create({
+      name: req?.body?.displayName,
+      avatar: req?.body?.photoURL,
+      email: req?.body?.email,
+      password: 'user12345',
+      mobile: req?.body?.providerData?.phoneNumber,
+    });
+  }
+  const accessToken = jwtHelpers.generateToken(
+    {
+      id: userInfo.id,
+      email: userInfo.email,
+      role: userInfo.role,
+      name: userInfo.name,
+    },
+    config.jwt__access_secret as string,
+    config.jwt__access_expire_in as string,
+  );
+  const refreshToken = jwtHelpers.generateToken(
+    {
+      id: userInfo.id,
+      email: userInfo.email,
+      role: userInfo.role,
+      name: userInfo.name,
+    },
+    config.jwt__refresh_secret as string,
+    config.jwt__refresh_expire_in as string,
+  );
+  await UserModel.updateOne(
+    { _id: userInfo._id },
+    { refresh_token: refreshToken },
+  );
+  return {
+    id: userInfo.id,
+    name: userInfo.name,
+    email: userInfo.email,
+    accessToken,
+    refreshToken,
+  };
+};
+
 const userServices = {
   userRegistration,
   verifyEmail,
@@ -161,5 +205,6 @@ const userServices = {
   updateUserDetails,
   getMe,
   changePassword,
+  GoogleUserRegistration,
 };
 export default userServices;
